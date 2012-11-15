@@ -24,13 +24,15 @@ Vagrant::Config.run do |config|
     # via the IP. Host-only networks can talk to the host machine as well as
     # any other machines on the same network, but cannot be accessed (through this
     # network interface) by any external networks.
-    controller_config.vm.network :hostonly, "172.31.255.201", :netmask => "255.255.0.0"
+    controller_config.vm.network :hostonly, "172.31.255.201", :netmask => "255.255.255.0"
     controller_config.vm.network :hostonly, "10.105.105.201"
     #controller_config.vm.network :hostonly, "10.105.105.254"
 
     # Customise the VM virtual hardware
     controller_config.vm.customize ["modifyvm", :id, "--memory", 1024]
     controller_config.vm.customize ["modifyvm", :id, "--cpus", 1]
+    # vCPU renice ... 40%
+    controller_config.vm.customize ["modifyvm", :id, "--cpuexecutioncap", 40]
     controller_config.vm.customize ["createhd", "--filename", "controller-cinder.vdi", "--size", 20480]
     controller_config.vm.customize ["storageattach", :id, "--storagectl", "SATA Controller","--port", 1, "--device", 0, "--type", "hdd", "--medium", "controller-cinder.vdi"] 
   
@@ -51,12 +53,14 @@ Vagrant::Config.run do |config|
     # doesn't already exist on the user's system.
     compute_config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
-    compute_config.vm.network :hostonly, "172.31.255.202", :netmask => "255.255.0.0"
+    compute_config.vm.network :hostonly, "172.31.255.202", :netmask => "255.255.255.0"
     compute_config.vm.network :hostonly, "10.105.105.202"
 
     # Customise the VM virtual hardware
     compute_config.vm.customize ["modifyvm", :id, "--memory", 2048]
     compute_config.vm.customize ["modifyvm", :id, "--cpus", 2]
+    # vCPU renice ... 40%
+    compute_config.vm.customize ["modifyvm", :id, "--cpuexecutioncap", 40]
   
     # Execute the installation scripts (via SSH)
     compute_config.vm.provision :shell, :path => "vagrant-compute-bootstrap.sh"
