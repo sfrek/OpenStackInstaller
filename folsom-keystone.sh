@@ -62,9 +62,7 @@ keystone_create_services() {
 keystone_create_service_endpoints() {
 	# Create endpoints on the services
 
-	# for S in ${SERVICES^^}
-  # services in database not in Uppercase.
-	for S in ${SERVICES}
+	for S in ${SERVICES^^}
 	do
 		ID=$(keystone service-list | grep -i "\ $S\ " | awk '{print $2}')
 		PUBLIC=$(eval echo \$${S}_PUBLIC_URL)
