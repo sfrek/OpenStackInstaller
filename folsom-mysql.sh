@@ -44,6 +44,7 @@ recreate_databases() {
 		mysql -uroot -p$MYSQL_ROOT_PASS -e "create database $d;"
 		mysql -uroot -p$MYSQL_ROOT_PASS -e "grant all privileges on $d.* to $d@\"localhost\" identified by \"$MYSQL_DB_PASS\";"
 		mysql -uroot -p$MYSQL_ROOT_PASS -e "grant all privileges on $d.* to $d@\"%\" identified by \"$MYSQL_DB_PASS\";"
+		mysql -uroot -p$MYSQL_ROOT_PASS -e "grant all privileges on $d.* to $d@\"$MYSQL_SERVER\" identified by \"$MYSQL_DB_PASS\";"
 	done
 }
 
