@@ -34,6 +34,9 @@ keystone_create_environment_resource_file() {
 	echo "export OS_AUTH_URL=http://$KEYSTONE_ENDPOINT:5000/v2.0/" >> $RC_FILE
 	echo "export SERVICE_ENDPOINT=http://$KEYSTONE_ENDPOINT:35357/v2.0/" >> $RC_FILE
 	echo "export SERVICE_TOKEN=ADMIN" >> $RC_FILE
+  echo "export OS_NO_CACHE=1" >> $RC_FILE
+  # thanks to @pjimenezsolis and his post:
+  #   http://pedrojimenez.github.com/blog/2012/11/15/ubuntu-keyring-password-and-folsom/
 }
 
 keystone_create_roles() {
@@ -59,7 +62,9 @@ keystone_create_services() {
 keystone_create_service_endpoints() {
 	# Create endpoints on the services
 
-	for S in ${SERVICES^^}
+	# for S in ${SERVICES^^}
+  # services in database not in Uppercase.
+	for S in ${SERVICES}
 	do
 		ID=$(keystone service-list | grep -i "\ $S\ " | awk '{print $2}')
 		PUBLIC=$(eval echo \$${S}_PUBLIC_URL)
